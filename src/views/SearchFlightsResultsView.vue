@@ -1,14 +1,14 @@
 <template>
   <div class="min-h-screen bg-gray-50">
     <NavigationBar />
-    <div class="container py-8">
-      <router-link to="/flight-search" class="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 mb-6">
+    <div class="container py-16 md:py-20">
+      <router-link to="/flight-search" class="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 hover:gap-3 transition-all mb-6">
         <ArrowLeft class="w-4 h-4" /> Back to Search
       </router-link>
 
-      <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8">
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-8 animate-fade-in-up">
         <div>
-          <h1 class="text-3xl font-bold text-gray-900">Available Flights</h1>
+          <h1 class="text-3xl md:text-4xl font-display font-bold text-gray-900">Available Flights</h1>
           <p class="text-gray-600">
             {{ query.origin }} → {{ query.destination }} • {{ query.departureDate }} • {{ query.passengers }} Passenger{{ query.passengers > 1 ? 's' : '' }}
           </p>
@@ -18,28 +18,35 @@
         </div>
       </div>
 
-      <div v-if="loading" class="flex justify-center py-12">
-        <Loader2 class="w-12 h-12 text-primary-500 animate-spin" />
+      <div v-if="loading" class="flex flex-col items-center justify-center gap-3 py-12">
+        <Loader2 class="w-12 h-12 text-gold-400 animate-spin" />
+        <p class="text-sm text-gray-500">Loading flights...</p>
       </div>
-      <div v-else-if="flights.length === 0" class="text-center py-12 text-gray-600">
-        No flights found for this route.
+      <div v-else-if="flights.length === 0" class="bg-white rounded-2xl border border-gray-100 shadow-sm p-12 text-center">
+        <div class="w-16 h-16 bg-primary-50 rounded-full flex items-center justify-center mx-auto mb-4">
+          <SearchX class="w-8 h-8 text-primary-500" />
+        </div>
+        <h3 class="text-lg font-display font-bold text-gray-900 mb-1">No flights found</h3>
+        <p class="text-gray-600 mb-6 font-sans">Try a different route or date to see available flights.</p>
+        <router-link to="/flight-search" class="btn btn-primary btn-md">New Search</router-link>
       </div>
       <div v-else class="space-y-4">
         <BaseCard
-          v-for="flight in sortedFlights"
+          v-for="(flight, idx) in sortedFlights"
           :key="flight.id"
-          class="cursor-pointer hover:shadow-xl transition-shadow"
+          class="cursor-pointer animate-fade-in-up"
+          :style="{ animationDelay: `${idx * 75}ms` }"
           @click="goToDetails(flight.id)"
         >
           <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div class="flex items-center gap-4 flex-1">
-              <div class="w-14 h-14 bg-primary-100 rounded-lg flex items-center justify-center flex-shrink-0">
-                <Plane class="w-7 h-7 text-primary-500" />
+              <div class="w-14 h-14 bg-primary-800 rounded-lg flex items-center justify-center flex-shrink-0">
+                <Plane class="w-7 h-7 text-gold-400" />
               </div>
               <div>
                 <div class="flex items-center gap-2">
                   <h3 class="font-semibold text-gray-900">{{ flight.airline }}</h3>
-                  <span v-if="flight.badge" class="px-2 py-0.5 text-xs font-semibold bg-amber-100 text-amber-700 rounded-full">
+                  <span v-if="flight.badge" class="px-2 py-0.5 text-xs font-semibold bg-gold-100 text-gold-700 rounded-full">
                     {{ flight.badge }}
                   </span>
                 </div>
@@ -66,7 +73,7 @@
             </div>
 
             <div class="text-right">
-              <p class="text-2xl font-bold text-primary-500">${{ flight.price.toLocaleString() }}</p>
+              <p class="text-2xl font-bold text-gold-600">${{ flight.price.toLocaleString() }}</p>
               <p class="text-xs text-gray-500 mb-2">JMD</p>
               <BaseButton size="sm" @click.stop="bookNow(flight.id)">Book Now</BaseButton>
             </div>
@@ -80,7 +87,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { Plane, ArrowLeft, Loader2 } from 'lucide-vue-next'
+import { Plane, ArrowLeft, Loader2, SearchX } from 'lucide-vue-next'
 import axios from 'axios'
 import NavigationBar from '@/components/layout/NavigationBar.vue'
 import BaseCard from '@/components/ui/BaseCard.vue'

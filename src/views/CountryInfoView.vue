@@ -2,24 +2,28 @@
   <div class="min-h-screen bg-gray-50">
     <NavigationBar />
 
-    <section class="bg-gradient-to-r from-primary-600 to-primary-800 text-white py-16">
-      <div class="container text-center">
-        <Globe class="w-16 h-16 mx-auto mb-4" />
-        <h1 class="text-4xl font-bold mb-4">Country Information</h1>
-        <p class="text-xl text-primary-100">Learn about visa requirements, travel tips, and what to expect</p>
+    <section class="bg-primary-800 relative overflow-hidden">
+      <div class="absolute inset-0 pointer-events-none select-none opacity-10">
+        <div class="absolute top-8 left-12 w-48 h-48 rounded-full border border-white/30"></div>
+        <div class="absolute bottom-4 right-16 w-72 h-72 rounded-full border border-white/20"></div>
+      </div>
+      <div class="container text-center py-16 relative animate-fade-in">
+        <Globe class="w-16 h-16 mx-auto mb-4 text-gold-400" />
+        <h1 class="text-4xl md:text-5xl font-display font-bold text-white mb-4">Country Information</h1>
+        <p class="text-xl text-white/70">Learn about visa requirements, travel tips, and what to expect</p>
       </div>
     </section>
 
-    <div class="container py-12 space-y-8">
-      <div>
+    <div class="container py-16 md:py-20 space-y-16">
+      <div class="animate-fade-in-up">
         <label class="block text-sm font-medium text-gray-700 mb-3">Select a Destination</label>
         <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <button
             v-for="country in countries"
             :key="country.id"
             @click="selectedCountry = country.id"
-            class="p-4 rounded-xl border-2 transition-all"
-            :class="selectedCountry === country.id ? 'border-primary-500 bg-primary-50' : 'border-gray-200 bg-white hover:border-primary-300'"
+            class="p-4 rounded-xl border-2 transition-all duration-200 hover:-translate-y-1"
+            :class="selectedCountry === country.id ? 'border-gold-500 bg-primary-50' : 'border-gray-200 bg-white hover:border-gold-300'"
           >
             <div class="text-4xl mb-2">{{ country.flag }}</div>
             <p class="font-semibold text-gray-900">{{ country.name }}</p>
@@ -27,20 +31,20 @@
         </div>
       </div>
 
-      <BaseCard v-if="currentCountry" class="overflow-hidden p-0">
-        <div class="bg-gradient-to-r from-primary-600 to-primary-800 text-white p-6">
+      <BaseCard v-if="currentCountry" class="overflow-hidden p-0 animate-fade-in-up">
+        <div class="bg-primary-800 text-white p-6">
           <div class="flex items-center gap-4">
             <span class="text-6xl">{{ currentCountry.flag }}</span>
             <div>
-              <h2 class="text-3xl font-bold">{{ currentCountry.name }}</h2>
-              <p class="text-primary-100">Travel Guide & Requirements</p>
+              <h2 class="text-3xl font-display font-bold">{{ currentCountry.name }}</h2>
+              <p class="text-gold-400">Travel Guide & Requirements</p>
             </div>
           </div>
         </div>
         <div class="p-6 md:p-8">
           <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
             <div class="space-y-6">
-              <div v-for="(item, key) in infoItems" :key="key" class="flex items-start gap-3">
+              <div v-for="(item, key) in infoItems" :key="key" class="flex items-start gap-3 hover:translate-x-0.5 transition-transform duration-200">
                 <component :is="item.icon" class="w-6 h-6 text-primary-500 mt-1" />
                 <div>
                   <h3 class="font-semibold text-gray-900">{{ item.label }}</h3>
@@ -71,11 +75,11 @@
         </div>
       </BaseCard>
 
-      <div class="bg-gradient-to-r from-primary-600 to-primary-800 rounded-2xl shadow-lg p-8 text-center text-white">
-        <h2 class="text-2xl font-bold mb-3">Ready to Book Your Flight?</h2>
-        <p class="text-primary-100 mb-6">Start planning your trip to {{ currentCountry?.name }} today</p>
+      <div class="bg-primary-800 rounded-2xl shadow-lg p-8 text-center text-white animate-fade-in-up">
+        <h2 class="text-2xl font-display font-bold mb-3">Ready to Book Your Flight?</h2>
+        <p class="text-white/70 mb-6">Start planning your trip to {{ currentCountry?.name }} today</p>
         <router-link to="/flight-search">
-          <BaseButton variant="ghost" class="bg-white text-primary-600 hover:bg-gray-100">Search Flights</BaseButton>
+          <BaseButton size="lg">Search Flights</BaseButton>
         </router-link>
       </div>
     </div>

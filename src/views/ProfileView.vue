@@ -1,21 +1,21 @@
 <template>
   <div class="min-h-screen bg-gray-50">
     <NavigationBar />
-    <div class="container py-8">
+    <div class="container py-16 md:py-20">
       <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
         <div class="lg:col-span-1">
           <SidebarNav :items="sidebarItems" />
         </div>
-        <div class="lg:col-span-3">
-          <h1 class="text-3xl font-bold text-gray-900 mb-8">My Profile</h1>
+        <div class="lg:col-span-3 animate-fade-in-up">
+          <h1 class="text-3xl font-display font-bold text-gray-900 mb-8">My Profile</h1>
           <BaseCard>
             <div class="flex items-center gap-6 mb-8 pb-8 border-b border-gray-200">
-              <div class="w-24 h-24 bg-primary-100 rounded-full flex items-center justify-center">
-                <User class="w-12 h-12 text-primary-500" />
+              <div class="w-24 h-24 bg-primary-800 rounded-full flex items-center justify-center">
+                <User class="w-12 h-12 text-gold-400" />
               </div>
               <div>
-                <h2 class="text-2xl font-bold text-gray-900">{{ form.fullName }}</h2>
-                <p class="text-gray-600">Jago Travel Member</p>
+                <h2 class="text-2xl font-display font-bold text-gray-900">{{ form.fullName }}</h2>
+                <p class="text-gold-600 font-medium font-sans">Jago Travel Member</p>
               </div>
             </div>
             <form @submit.prevent="handleSubmit" class="space-y-6">
@@ -27,7 +27,7 @@
                 <BaseInput v-model="form.passportNumber" label="Passport Number" />
               </div>
               <div class="flex justify-end gap-4 pt-6 border-t border-gray-200">
-                <BaseButton variant="secondary" @click="reset">Cancel</BaseButton>
+                <BaseButton variant="outline" @click="reset">Cancel</BaseButton>
                 <BaseButton type="submit">Save Changes</BaseButton>
               </div>
             </form>

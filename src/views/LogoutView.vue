@@ -1,7 +1,10 @@
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-gray-100">
-    <div class="text-center">
-      <h2 class="text-xl font-semibold mb-4">Logging out...</h2>
+  <div class="min-h-screen flex items-center justify-center bg-gradient-to-b from-primary-50/30 to-white">
+    <div class="text-center animate-fade-in">
+      <div class="w-16 h-16 bg-primary-800 rounded-full flex items-center justify-center mx-auto mb-4">
+        <Loader2 class="w-8 h-8 text-gold-400 animate-spin" />
+      </div>
+      <h2 class="text-xl font-display font-semibold text-gray-900">Logging out...</h2>
     </div>
   </div>
 </template>
@@ -9,6 +12,7 @@
 import { onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import axios from 'axios'
+import { Loader2 } from 'lucide-vue-next'
 import { getToken } from '../utils/auth'
 
 const router = useRouter()

@@ -1,19 +1,19 @@
 <template>
   <div class="min-h-screen bg-gray-50">
     <NavigationBar />
-    <div class="container py-8">
+    <div class="container py-16 md:py-20">
       <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
         <div class="lg:col-span-1">
           <SidebarNav :items="sidebarItems" />
         </div>
-        <div class="lg:col-span-3">
-          <h1 class="text-3xl font-bold text-gray-900 mb-8">Settings</h1>
+        <div class="lg:col-span-3 animate-fade-in-up">
+          <h1 class="text-3xl font-display font-bold text-gray-900 mb-8">Settings</h1>
 
           <div class="space-y-6">
             <BaseCard>
               <div class="flex items-center gap-3 mb-6">
                 <Bell class="w-6 h-6 text-primary-500" />
-                <h2 class="text-xl font-semibold text-gray-900">Notifications</h2>
+                <h2 class="text-xl font-display font-bold text-gray-900">Notifications</h2>
               </div>
               <div class="space-y-4">
                 <label v-for="(setting, key) in notificationSettings" :key="key" class="flex items-center justify-between cursor-pointer">
@@ -21,7 +21,7 @@
                     <p class="font-medium text-gray-900">{{ setting.label }}</p>
                     <p class="text-sm text-gray-600">{{ setting.description }}</p>
                   </div>
-                  <input type="checkbox" v-model="setting.value" class="w-5 h-5 text-primary-500 rounded focus:ring-primary-500" />
+                  <input type="checkbox" v-model="setting.value" class="w-5 h-5 text-gold-500 rounded focus:ring-gold-500" />
                 </label>
               </div>
             </BaseCard>
@@ -29,7 +29,7 @@
             <BaseCard>
               <div class="flex items-center gap-3 mb-6">
                 <Globe class="w-6 h-6 text-primary-500" />
-                <h2 class="text-xl font-semibold text-gray-900">Preferences</h2>
+                <h2 class="text-xl font-display font-bold text-gray-900">Preferences</h2>
               </div>
               <div class="space-y-4">
                 <BaseSelect
@@ -48,14 +48,14 @@
             <BaseCard>
               <div class="flex items-center gap-3 mb-6">
                 <Lock class="w-6 h-6 text-primary-500" />
-                <h2 class="text-xl font-semibold text-gray-900">Security</h2>
+                <h2 class="text-xl font-display font-bold text-gray-900">Security</h2>
               </div>
               <div class="space-y-4">
-                <button class="w-full text-left px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                <button class="w-full text-left px-4 py-3 border border-gray-300 rounded-lg hover:border-gold-400 hover:bg-primary-50 transition-colors duration-200">
                   <p class="font-medium text-gray-900">Change Password</p>
                   <p class="text-sm text-gray-600">Update your password to keep your account secure</p>
                 </button>
-                <button class="w-full text-left px-4 py-3 border border-gray-300 rounded-lg hover:bg-gray-50 transition">
+                <button class="w-full text-left px-4 py-3 border border-gray-300 rounded-lg hover:border-gold-400 hover:bg-primary-50 transition-colors duration-200">
                   <p class="font-medium text-gray-900">Two-Factor Authentication</p>
                   <p class="text-sm text-gray-600">Add an extra layer of security to your account</p>
                 </button>

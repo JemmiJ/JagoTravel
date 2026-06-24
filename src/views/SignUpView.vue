@@ -1,13 +1,15 @@
 <template>
   <div class="min-h-screen bg-gradient-to-br from-primary-50/30 to-white flex items-center justify-center px-4 py-8">
-    <div class="w-full max-w-md">
+    <div class="w-full max-w-md animate-fade-in-up">
       <div class="text-center mb-8">
-        <router-link to="/" class="inline-flex items-center gap-2 mb-4">
-          <Plane class="w-10 h-10 text-primary-500" />
-          <span class="text-3xl font-display text-gray-900">JagoTravel</span>
+        <router-link to="/" class="inline-flex items-center gap-2 mb-4 group">
+          <div class="w-10 h-10 bg-gold-500 rounded-xl flex items-center justify-center transition-transform group-hover:scale-105">
+            <Plane class="w-5 h-5 text-primary-900" />
+          </div>
+          <span class="text-3xl font-display font-bold text-gray-900">Jago<span class="text-primary-600">Travel</span></span>
         </router-link>
-        <h2 class="text-2xl font-bold text-gray-900">Create Account</h2>
-        <p class="text-gray-600 mt-2">Join us and start your journey</p>
+        <h2 class="text-2xl font-display font-bold text-gray-900">Create Account</h2>
+        <p class="text-gray-600 mt-2 font-sans">Join us and start your journey</p>
       </div>
 
       <BaseCard>
@@ -24,7 +26,7 @@
           </div>
           <p class="text-center text-sm text-gray-600">
             Already have an account?
-            <router-link to="/login" class="text-primary-500 hover:underline font-medium">Log in</router-link>
+            <router-link to="/login" class="text-primary-600 hover:underline font-medium">Log in</router-link>
           </p>
         </form>
       </BaseCard>
