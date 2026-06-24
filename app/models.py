@@ -52,3 +52,23 @@ class Booking(db.Model):
             'status': self.status,
             'created_at': self.created_at.isoformat(),
         }
+    
+class Country(db.Model):
+    __tablename__ = 'countries'
+
+    id = db.Column(db.Integer, primary_key=True)
+    fromcountry = db.Column(db.String(80), nullable=False)
+    tocountry= db.Column(db.String(80), nullable=False)
+    duration = db.Column(db.Integer, nullable=False)
+    residentcountry = db.Column(db.String(80), unique=True, nullable=False)
+    fromrequirements = db.Column(db.Text, nullable=False)
+    torequirements = db.Column(db.Text, nullable=False)
+    
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'fromcountry': self.fromcountry,
+            'tocountry': self.tocountry,
+            'duration': self.duration,
+            'residentcountry': self.residentcountry,
+        }

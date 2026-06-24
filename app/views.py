@@ -8,7 +8,7 @@ This file creates your application.
 from app import app, db, bcrypt
 from flask import render_template, send_from_directory, request, jsonify, send_file, session, Flask
 import os
-from .models import User, Booking
+from .models import User, Booking, Country
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
 from werkzeug.utils import secure_filename
@@ -36,6 +36,23 @@ def allowed_file(filename):
 @app.route('/')
 def index():
     return send_from_directory(app.static_folder, "index.html")
+
+@app.route('/generate_user')
+def generate_countries():
+    sample_users = [
+        {"fromcountry": "Jamaica", "tocountry": "United States of America", "duration": "7", "residentcountry": "Jamaica", "fromrequirements": "Visa Requirements - Passengers must have a valid visa issued by the USA. Immediate family members of nationals of Colombia, Cuba, Ecuador, El Salvador, Guatemala, Haiti, Honduras, Nicaragua and Venezuela traveling under the Family Reunification Parole (FRP) or of nationals of Ukraine traveling under United for Ukraine status process do not need a visa if they: - have an approved Advance Travel Authorization ATA issued by U.S. Customs and Border Protection CBP to seek parole; and - have a valid passport; and - travel together with the national of Colombia, Cuba, Ecuador, El Salvador, Guatemala, Haiti, Honduras, Nicaragua, Ukraine or Venezuela or contact the U.S. Customs and Border Protection (CBP). Immediate family members may be of any nationality and are limited to spouse or common-law partner and unmarried children under the age of 21. Passengers can check the status of their ATA at https://my.uscis.gov/ . Passengers do not need a visa if they are admitted to the USA on an F or a J visa after a visit of maximum 30 days to Kingston. They must have an admission stamp or a paper Form I-94 endorsed by DHS. Passengers with an Authorization for Parole of an Alien into the United States (Form I-512) or an Authorization to Transport for Parole of a Noncitizen into the United States (Form I-512L) do not need a visa.Passengers with an Employment Authorization Card (Form I-766) do not need a visa if endorsed Serves as I-512 Advance Parole or Valid for re-entry to US", "torequirements": "Visa Requirements - Nationals of Jamaica do not need a visa. Normal Importance Forms - Passengers must submit the customs and immigration C5 form before departure or upon arrival at https://www.enterjamaica.gov.jm/ ."},
+        {"fromcountry": "United States of America", "tocountry": "Jamaica", "duration": "7", "residentcountry": "United States of America", "fromrequirements": "Visa Requirements - Nationals of the USA do not need a visa for a maximum of 6 months in a period of one year. Normal Importance Forms - Passengers must submit the customs and immigration C5 form before departure or upon arrival at https://www.enterjamaica.gov.jm/ ."},
+        {"fromcountry": "Jamaica", "tocountry": "Canada", "duration": "7", "residentcountry": "Jamaica"},
+        {"fromcountry": "Canada", "tocountry": "Jamaica", "duration": "7", "residentcountry": "Canada", "fromrquirements" : "Visa Requirements - Passengers must have a valid visa issued by Somalia. Passengers working for the European Union Missions Supporting the Federal Government of Somalia traveling on duty do not need a visa. They must have a mission ID card, or an official appointment letter. This applies to the European Union Training Mission (EUTM) and the European Union Capacity Building Mission (EUCAP). They do not need to obtain an e-visa (electronic travel authorization). They do not need to obtain an e-visa (electronic travel authorization). Passengers must obtain an e-visa (electronic travel authorization) before departure at https://etas.gov.so. The e-visa contains a QR code for verification of the passenger's visa status and must be scanned before acceptance. Passengers traveling to Berbera (BBO) or Hargeisa Egal International (HGA) must meet the entry requirements for Somalia."},
+        {"fromcountry": "Jamaica", "tocountry": "United Kingdon", "duration": "7", "residentcountry": "Jamaica"},
+        {"fromcountry": "United Kingdom", "tocountry": "Jamaica", "duration": "7", "residentcountry": "United Kingdom"},
+    ]
+    for user_data in sample_users:
+        if not Country.query.filter_by(username=user_data["username"]).first():
+            user = Country(**user_data)
+            db.session.add(user)
+    db.session.commit()
+    return jsonify({"message": f"Sample users generated: {len(sample_users)}"})
 
 @app.route('/assets/<path:filename>')
 def assests(filename):
