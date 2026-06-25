@@ -37,4 +37,25 @@ __screenshots__/
 
 # Vite
 *.timestamp-*-*.mjs
-".env" 
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Environment Variables
+ .env
+ .flaskenv
+
+# virtualenv
+.venv/
+venv/
+migrations/env.py
+migrations/alembic.ini
+
+migrations/script.py.mako

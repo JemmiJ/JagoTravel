@@ -19,7 +19,7 @@
           class="text-white focus:outline-none focus:ring-2 focus:ring-white rounded p-1"
           aria-label="Toggle menu"
         >
-          <MenuIcon class="w-6 h-6" />
+          <Menu class="w-6 h-6" />   
         </button>
       </div>
     </div>
@@ -48,7 +48,7 @@
           @click="handleLogout"
           class="w-full text-left px-4 py-2.5 text-sm text-red-600 hover:bg-gray-50 transition-colors flex items-center gap-3"
         >
-          <LogOutIcon class="w-5 h-5" />
+          <LogOut class="w-5 h-5" /> 
           Logout
         </button>
       </div>
@@ -61,15 +61,21 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 import { Menu, LogOut, Plane, Info, Globe, Gift, Bus, User, BookOpen, Settings, Award } from 'lucide-vue-next'
 
+
 const router = useRouter()
 const showDropdown = ref(false)
 const user = ref({ name: '' })
 
-const isAuthenticated = computed(() => !!localStorage.getItem('user_id'))
+const isAuthenticated = computed(() => {
+  const id = localStorage.getItem('user_id')
+  console.log('isAuthenticated check:', !!id) 
+  return !!id
+});
 
 onMounted(() => {
   const storedName = localStorage.getItem('name')
   user.value.name = storedName || 'User'
+  console.log('User name loaded:', user.value.name)
 })
 
 const menuItems = [
@@ -93,9 +99,12 @@ function closeDropdown() {
 }
 
 function handleLogout() {
+  console.log('Logout clicked')
   localStorage.removeItem('token')
   localStorage.removeItem('user_id')
   localStorage.removeItem('name')
+  console.log('LocalStorage cleared')
   router.push('/')
+  console.log('Redirected to home')
 }
 </script>

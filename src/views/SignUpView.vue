@@ -35,6 +35,7 @@
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
+import axios from 'axios'
 import { Plane } from 'lucide-vue-next'
 import NavigationBar from '@/components/layout/NavigationBar.vue'
 import BaseCard from '@/components/ui/BaseCard.vue'
@@ -56,18 +57,19 @@ function signup() {
   const form_data = new FormData()
   Object.keys(formData.value).forEach(key => form_data.append(key, formData.value[key]))
 
-  fetch('/api/signup', {
-    method: 'POST',
-    body: form_data,
+  axios.post('/api/signup', form_data, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
   })
-    .then(res => {
-      if (!res.ok) throw new Error('Failed to signup')
-      return res.json()
-    })
     .then(() => {
       formData.value = { name: '', username: '', email: '', password: '', address: '', phoneNumber: '' }
       router.push('/login')
     })
-    .catch(error => console.error('Error:', error))
+    .catch(error => {
+      console.error('Signup failed:', error)
+      const message = error.response?.data?.error || 'An error occurred during signup. Please try again.'
+      alert(message)
+    })
 }
 </script>

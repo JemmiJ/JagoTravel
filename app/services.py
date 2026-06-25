@@ -4,7 +4,7 @@ import requests
 class AviationStackAPI:
     @classmethod
     def search_flights(cls, origin, destination, date):
-        url = 'https://api.aviationstack.com/v1'
+        url = 'https://api.aviationstack.com/v1/flights'
         params = {
             'access_key': os.getenv('AVIATIONSTACK_API_KEY'),
             'dep_iata': origin,
@@ -13,10 +13,19 @@ class AviationStackAPI:
             'limit': 10
         }
         resp = requests.get(url, params=params)
-        data = resp.join()
+        data = resp.json()
 
-        flights=[]
-        for flight in data.get('data', []):
+        # ✅ Log the full response for debugging
+        print("AviationStack response status:", resp.status_code)
+        print("AviationStack response data:", data)
+
+        # Check for errors
+        if not data.get('data'):
+            print("No 'data' key or empty list. Check API response.")
+            return []
+
+        flights = []
+        for flight in data['data']:
             flights.append({
                 'id': flight.get('flight', {}).get('iata', 'N/A'),
                 'airline': flight.get('airline', {}).get('name', 'Unknown'),
@@ -28,7 +37,7 @@ class AviationStackAPI:
                 'price': 0,
                 'currency': 'JMD'
             })
-        
+
         for f in flights:
-            f['price'] = 35000 + (hash(f['id']) %20000)
+            f['price'] = 35000 + (hash(f['id']) % 20000)
         return flights

@@ -18,7 +18,7 @@
     ]"
     v-bind="$attrs"
   >
-    <slot />
+    <slot></slot>
   </button>
 </template>
 

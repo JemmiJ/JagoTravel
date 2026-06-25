@@ -158,16 +158,47 @@ def login():
     except Exception as e:
         return jsonify({'error': f'Something went wrong: {str(e)}'}), 500
 
+@app.route('/api/user', methods=['GET'])
+@login_required
+def get_current_user():
+    return jsonify({
+        'id': current_user.id,
+        'name': current_user.name,
+        'username': current_user.username,
+        'email': current_user.email,
+        'address': current_user.address,
+        'phoneNumber': current_user.phoneNumber,
+        'address': current_user.address 
+    })
+
+@app.route('/api/user', methods=['PUT'])
+@login_required
+def update_user():
+    data = request.get_json()
+    user = current_user
+    if 'name' in data:
+        user.name = data['name']
+    if 'email' in data:
+        user.email = data['email']
+    if 'phoneNumber' in data:
+        user.phoneNumber = data['phoneNumber']
+    if 'address' in data:
+        user.address = data['address']
+    db.session.commit()
+    return jsonify({'message': 'User updated successfully'})
+
 @app.route('/api/flights', methods=['GET'])
 def search_flights():
-    origin = request.args.get('origin')
-    destination = request.args.get('destination')
-    date = request.args.get('date')
-    
+    origin = request.args.get('origin', '').strip().upper()
+    destination = request.args.get('destination', '').strip().upper()
+    date = request.args.get('date', '').strip()
+
     if not origin or not destination or not date:
         return jsonify({'error': 'Missing parameters'}), 400
+
     try:
         flights = AviationStackAPI.search_flights(origin, destination, date)
+        print(f"AviationStack returned {len(flights)} flights")  # debug
         for flight in flights:
             unique_key = f"{flight['airline']}_{flight['flight_number']}_{flight['departure']}"
             flight_id = str(hash(unique_key))
@@ -175,6 +206,8 @@ def search_flights():
             flight_cache[flight_id] = flight
         return jsonify(flights)
     except Exception as e:
+        import traceback
+        traceback.print_exc()
         return jsonify({'error': str(e)}), 500
 
 @app.route('/api/flights/<flight_id>', methods=['GET'])
