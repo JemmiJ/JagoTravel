@@ -77,7 +77,9 @@ const sidebarItems = [
 const fetchBookings = async () => {
   loading.value = true
   try {
-    const resp = await axios.get('/api/bookings', { withCredentials: true })
+    const resp = await axios.get('/api/bookings', {
+      headers: { Authorization: `Bearer ${token}` }
+    })
     bookings.value = resp.data
   } catch (error) {
     console.error('Error fetching bookings:', error)
@@ -90,9 +92,11 @@ onMounted(fetchBookings)
 
 const statusClass = (status) => {
   const map = {
+    confirmed: 'bg-green-100 text-green-700',
     paid: 'bg-green-100 text-green-700',
     pending: 'bg-amber-100 text-amber-700',
-    cancelled: 'bg-gray-100 text-gray-700',
+    cancelled: 'bg-red-100 text-red-700',
+    checked_in: 'bg-blue-100 text-blue-700',
   }
   return map[status] || 'bg-gray-100 text-gray-700'
 }

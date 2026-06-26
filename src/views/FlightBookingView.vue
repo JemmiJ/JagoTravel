@@ -1,19 +1,20 @@
 <template>
   <div class="min-h-screen bg-gray-50">
     <NavigationBar />
-    <div class="container py-8">
-      <h1 class="text-3xl font-bold text-gray-900 mb-8">Complete Your Booking</h1>
+    <div class="container py-16 md:py-20">
+      <h1 class="text-3xl md:text-4xl font-display font-bold text-gray-900 mb-8">Complete Your Booking</h1>
 
-      <div v-if="loading" class="flex justify-center py-12">
-        <Loader2 class="w-12 h-12 text-primary-500 animate-spin" />
+      <div v-if="loading" class="flex flex-col items-center justify-center gap-3 py-12">
+        <Loader2 class="w-12 h-12 text-gold-400 animate-spin" />
+        <p class="text-sm text-gray-500">Loading flight details...</p>
       </div>
 
-      <div v-else-if="flightDetails" class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div v-else-if="flightDetails" class="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-fade-in-up">
         <div class="lg:col-span-2">
           <BaseCard>
             <form @submit.prevent="handleSubmit" class="space-y-8">
               <div>
-                <h2 class="text-xl font-semibold text-gray-900 mb-4">Passenger Details</h2>
+                <h2 class="text-xl font-display font-semibold text-gray-900 mb-4">Passenger Details</h2>
                 <div class="space-y-4">
                   <BaseInput v-model="userDetails.name" label="Full Name" disabled />
                   <BaseInput v-model="userDetails.email" label="Email Address" disabled />
@@ -22,7 +23,7 @@
               </div>
 
               <div>
-                <h2 class="text-xl font-semibold text-gray-900 mb-4">Preferences</h2>
+                <h2 class="text-xl font-display font-semibold text-gray-900 mb-4">Preferences</h2>
                 <div class="space-y-4">
                   <div>
                     <label class="block text-sm font-medium text-gray-700 mb-2">Seat Preference</label>
@@ -61,10 +62,10 @@
 
         <div class="lg:col-span-1">
           <BaseCard class="sticky top-6">
-            <h2 class="text-xl font-semibold text-gray-900 mb-6">Flight Summary</h2>
+            <h2 class="text-xl font-display font-semibold text-gray-900 mb-6">Flight Summary</h2>
             <div class="flex items-center gap-3 mb-6 pb-6 border-b border-gray-200">
-              <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
-                <Plane class="w-6 h-6 text-primary-500" />
+              <div class="w-12 h-12 bg-primary-800 rounded-lg flex items-center justify-center">
+                <Plane class="w-6 h-6 text-gold-400" />
               </div>
               <div>
                 <p class="font-semibold text-gray-900">{{ flightDetails.airline }}</p>
@@ -89,10 +90,20 @@
                 <span class="font-medium text-gray-900">{{ formatTime(flightDetails.arrival) }}</span>
               </div>
             </div>
+            <div class="space-y-2 mb-4">
+              <div class="flex justify-between text-sm">
+                <span class="text-gray-500">Base Fare</span>
+                <span class="text-gray-700">${{ flightDetails.price.toLocaleString() }} JMD</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-gray-500">Taxes & Fees (15%)</span>
+                <span class="text-gray-700">${{ Math.round(flightDetails.price * 0.15).toLocaleString() }} JMD</span>
+              </div>
+            </div>
             <div class="bg-primary-50 rounded-lg p-4">
               <div class="flex justify-between items-center">
                 <span class="font-semibold text-gray-900">TOTAL</span>
-                <span class="text-2xl font-bold text-primary-500">
+                <span class="text-2xl font-bold text-gold-600">
                   ${{ flightDetails.total ? flightDetails.total.toLocaleString() : flightDetails.price.toLocaleString() }} JMD
                 </span>
               </div>
@@ -161,8 +172,9 @@ const fetchFlightDetails = async () => {
 }
 
 const fetchUserDetails = () => {
-  const name = localStorage.getItem('name') || 'User'
-  userDetails.name = name
+  userDetails.name = localStorage.getItem('name') || ''
+  userDetails.email = localStorage.getItem('email') || ''
+  userDetails.phone = localStorage.getItem('phone') || ''
 }
 
 onMounted(() => {
@@ -202,9 +214,12 @@ const handleSubmit = async () => {
   }
 
   try {
-    const resp = await axios.post('/api/bookings', payload, { withCredentials: true })
+    const token = localStorage.getItem('token')
+    const resp = await axios.post('/api/bookings', payload, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
     const bookingId = resp.data.booking_id
-    router.push(`/book-flight/payment?booking=${bookingId}`)
+    router.push(`/book-flight/payment?booking=${bookingId}&amount=${totalPrice}`)
   } catch (error) {
     console.error('Booking creation failed:', error)
     alert(error.response?.data?.error || 'Something went wrong. Please try again.')

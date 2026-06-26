@@ -1,11 +1,16 @@
 <template>
-  <div class="min-h-screen bg-gray-50">
+  <div class="min-h-screen bg-gradient-to-b from-primary-50/30 to-white">
     <NavigationBar />
     <div class="container py-12">
-      <div class="max-w-2xl mx-auto">
+      <div class="max-w-2xl mx-auto animate-fade-in-up">
+        <div class="text-center mb-8">
+          <div class="w-14 h-14 bg-gold-500 rounded-2xl flex items-center justify-center mx-auto mb-4">
+            <Search class="w-7 h-7 text-primary-900" />
+          </div>
+          <h2 class="text-3xl font-display font-bold text-gray-900 mb-2">Search Flights</h2>
+          <p class="text-gray-600">Find the perfect flight for your journey</p>
+        </div>
         <BaseCard>
-          <h2 class="text-2xl font-bold text-center mb-6">Search Flights</h2>
-          <p class="text-center text-gray-600 mb-8">Find the perfect flight for your journey</p>
           <form @submit.prevent="handleSearch" class="space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
               <BaseInput v-model="origin" label="Origin" placeholder="Kingston (KIN)" required />

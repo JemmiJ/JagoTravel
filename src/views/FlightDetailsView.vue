@@ -1,24 +1,25 @@
 <template>
   <div class="min-h-screen bg-gray-50">
     <NavigationBar />
-    <div class="container py-8">
-      <router-link to="/flight-search/results" class="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 mb-6">
+    <div class="container py-16 md:py-20">
+      <router-link to="/flight-search/results" class="inline-flex items-center gap-2 text-primary-600 hover:text-primary-700 hover:gap-3 transition-all mb-6">
         <ArrowLeft class="w-4 h-4" /> Back to Results
       </router-link>
 
-      <div v-if="loading" class="flex justify-center py-20">
-        <Loader2 class="w-12 h-12 text-primary-500 animate-spin" />
+      <div v-if="loading" class="flex flex-col items-center justify-center gap-3 py-20">
+        <Loader2 class="w-12 h-12 text-gold-400 animate-spin" />
+        <p class="text-sm text-gray-500">Loading flight details...</p>
       </div>
 
-      <div v-else-if="flight" class="max-w-4xl mx-auto">
+      <div v-else-if="flight" class="max-w-4xl mx-auto animate-fade-in-up">
         <BaseCard class="overflow-hidden">
           <!-- Header -->
-          <div class="bg-primary-500 text-white p-6 -m-6 mb-6">
+          <div class="bg-primary-800 text-white p-6 -m-6 mb-6">
             <div class="flex items-center gap-3">
-              <Plane class="w-8 h-8" />
+              <Plane class="w-8 h-8 text-gold-400" />
               <div>
-                <h1 class="text-2xl font-bold">{{ flight.airline }}</h1>
-                <p class="text-primary-100">Flight {{ flight.flight_number }}</p>
+                <h1 class="text-3xl md:text-4xl font-display font-bold">{{ flight.airline }}</h1>
+                <p class="text-white/70">Flight {{ flight.flight_number }}</p>
               </div>
             </div>
           </div>
@@ -28,11 +29,11 @@
             <div class="flex items-center justify-between">
               <div class="text-center">
                 <p class="text-sm text-gray-600">Departure</p>
-                <p class="text-3xl font-bold text-primary-500">{{ formatTime(flight.departure) }}</p>
+                <p class="text-3xl font-bold text-primary-700">{{ formatTime(flight.departure) }}</p>
                 <p class="text-lg font-semibold text-gray-900 mt-2">{{ query.origin || 'Origin' }}</p>
               </div>
               <div class="flex flex-col items-center px-8">
-                <Plane class="w-6 h-6 text-gray-400 mb-2" />
+                <Plane class="w-6 h-6 text-gold-500 mb-2" />
                 <div class="w-64 h-0.5 bg-gray-300 relative">
                   <div class="absolute left-0 w-2 h-2 bg-primary-500 rounded-full -top-0.5"></div>
                   <div class="absolute right-0 w-2 h-2 bg-primary-500 rounded-full -top-0.5"></div>
@@ -41,7 +42,7 @@
               </div>
               <div class="text-center">
                 <p class="text-sm text-gray-600">Arrival</p>
-                <p class="text-3xl font-bold text-primary-500">{{ formatTime(flight.arrival) }}</p>
+                <p class="text-3xl font-bold text-primary-700">{{ formatTime(flight.arrival) }}</p>
                 <p class="text-lg font-semibold text-gray-900 mt-2">{{ query.destination || 'Destination' }}</p>
               </div>
             </div>
@@ -65,7 +66,7 @@
                 <div class="border-t border-gray-300 pt-3 mt-3">
                   <div class="flex justify-between items-center">
                     <span class="font-semibold text-gray-900">TOTAL</span>
-                    <span class="text-3xl font-bold text-primary-500">
+                    <span class="text-3xl font-bold text-gold-600">
                       ${{ (flight.price + Math.round(flight.price * 0.15) + 3500).toLocaleString() }} JMD
                     </span>
                   </div>

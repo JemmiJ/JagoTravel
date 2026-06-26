@@ -117,7 +117,10 @@ onMounted(async () => {
   }
   loading.value = true
   try {
-    const resp = await axios.get(`/api/bookings/${bookingId}`, { withCredentials: true })
+    const token = localStorage.getItem('token')
+    const resp = await axios.get(`/api/bookings/${bookingId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
     bookingData.value = resp.data
   } catch (error) {
     console.error('Failed to load booking', error)

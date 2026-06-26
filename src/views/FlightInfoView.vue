@@ -2,56 +2,65 @@
   <div class="min-h-screen bg-gray-50">
     <NavigationBar />
 
-    <section class="bg-gradient-to-r from-primary-600 to-primary-800 text-white py-16">
-      <div class="container text-center">
-        <Plane class="w-16 h-16 mx-auto mb-4" />
-        <h1 class="text-4xl font-bold mb-4">Flight Information</h1>
-        <p class="text-xl text-primary-100">Everything you need to know before you fly</p>
+    <section class="bg-primary-800 relative overflow-hidden">
+      <div class="absolute inset-0 pointer-events-none select-none opacity-10">
+        <div class="absolute top-8 left-12 w-48 h-48 rounded-full border border-white/30"></div>
+        <div class="absolute bottom-4 right-16 w-72 h-72 rounded-full border border-white/20"></div>
+      </div>
+      <div class="container text-center py-16 relative">
+        <Plane class="w-16 h-16 mx-auto mb-4 text-gold-400" />
+        <h1 class="text-4xl font-display font-bold text-white mb-4">Flight Information</h1>
+        <p class="text-xl text-white/70">Everything you need to know before you fly</p>
       </div>
     </section>
 
-    <div class="container py-12 space-y-12">
-      <div class="max-w-2xl mx-auto">
+    <div class="container py-16 md:py-20 space-y-16">
+      <div class="max-w-2xl mx-auto animate-fade-in-up">
         <div class="relative">
           <Search class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
           <input
             v-model="searchQuery"
             type="text"
             placeholder="Search for flight information..."
-            class="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent shadow-md"
+            class="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gold-500 focus:border-transparent shadow-md transition-shadow"
           />
         </div>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <BaseCard v-for="info in filteredInfo" :key="info.title">
+        <BaseCard
+          v-for="(info, idx) in filteredInfo"
+          :key="info.title"
+          class="animate-fade-in-up"
+          :style="{ animationDelay: `${idx * 100}ms` }"
+        >
           <div class="flex items-center gap-3 mb-4">
             <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
               <component :is="info.icon" class="w-6 h-6 text-primary-500" />
             </div>
-            <h2 class="text-xl font-semibold text-gray-900">{{ info.title }}</h2>
+            <h3 class="text-xl font-display font-bold text-gray-900">{{ info.title }}</h3>
           </div>
           <ul class="space-y-3">
-            <li v-for="(item, idx) in info.content" :key="idx" class="flex items-start gap-2">
-              <span class="w-1.5 h-1.5 bg-primary-500 rounded-full mt-2 flex-shrink-0"></span>
-              <span class="text-gray-700">{{ item }}</span>
+            <li v-for="(item, i) in info.content" :key="i" class="flex items-start gap-2">
+              <span class="w-1.5 h-1.5 bg-gold-500 rounded-full mt-2 flex-shrink-0"></span>
+              <span class="text-gray-700 font-sans">{{ item }}</span>
             </li>
           </ul>
         </BaseCard>
       </div>
 
       <BaseCard>
-        <h2 class="text-2xl font-bold text-gray-900 mb-8">Frequently Asked Questions</h2>
+        <h2 class="text-2xl font-display font-bold text-gray-900 mb-8">Frequently Asked Questions</h2>
         <div v-for="(faq, idx) in faqs" :key="idx" class="border-b border-gray-200 pb-6 last:border-b-0 last:pb-0">
           <h3 class="font-semibold text-gray-900 mb-2">{{ faq.question }}</h3>
           <p class="text-gray-700">{{ faq.answer }}</p>
         </div>
       </BaseCard>
 
-      <div class="bg-gradient-to-r from-primary-600 to-primary-800 rounded-2xl shadow-lg p-8 text-center text-white">
-        <h2 class="text-2xl font-bold mb-3">Need More Help?</h2>
-        <p class="text-primary-100 mb-6">Our customer support team is available 24/7 to assist you</p>
-        <BaseButton variant="ghost" class="bg-white text-primary-600 hover:bg-gray-100">Contact Support</BaseButton>
+      <div class="bg-primary-800 rounded-2xl shadow-lg p-8 text-center text-white animate-fade-in-up">
+        <h2 class="text-2xl font-display font-bold mb-3">Need More Help?</h2>
+        <p class="text-white/70 mb-6">Our customer support team is available 24/7 to assist you</p>
+        <BaseButton size="lg">Contact Support</BaseButton>
       </div>
     </div>
   </div>

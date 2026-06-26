@@ -1,26 +1,26 @@
 <template>
   <div class="min-h-screen bg-gray-50">
     <NavigationBar />
-    <div class="container py-8">
+    <div class="container py-16 md:py-20">
       <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
         <div class="lg:col-span-1">
           <SidebarNav :items="sidebarItems" />
         </div>
-        <div class="lg:col-span-3">
-          <h1 class="text-3xl font-bold text-gray-900 mb-8">Loyalty Points</h1>
+        <div class="lg:col-span-3 animate-fade-in-up">
+          <h1 class="text-3xl font-display font-bold text-gray-900 mb-8">Loyalty Points</h1>
 
           <!-- Summary -->
-          <div class="bg-gradient-to-br from-amber-500 to-amber-600 rounded-2xl shadow-lg p-8 text-white mb-8">
+          <div class="bg-gradient-to-br from-gold-500 to-gold-600 rounded-2xl shadow-lg p-8 text-primary-900 mb-8">
             <div class="flex items-center justify-between">
               <div>
-                <p class="text-amber-100 mb-2">Your Total Points</p>
+                <p class="text-primary-900/70 mb-2">Your Total Points</p>
                 <p class="text-5xl font-bold">1,750</p>
                 <div class="flex items-center gap-2 mt-4">
                   <TrendingUp class="w-5 h-5" />
-                  <span class="text-amber-100">+450 points this month</span>
+                  <span class="text-primary-900/70">+450 points this month</span>
                 </div>
               </div>
-              <Star class="w-24 h-24 text-amber-200" />
+              <Star class="w-24 h-24 text-primary-900/20" />
             </div>
           </div>
 
@@ -28,8 +28,8 @@
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
             <BaseCard>
               <div class="flex items-center gap-3">
-                <div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
-                  <Award class="w-6 h-6 text-primary-500" />
+                <div class="w-12 h-12 bg-primary-800 rounded-full flex items-center justify-center">
+                  <Award class="w-6 h-6 text-gold-400" />
                 </div>
                 <div>
                   <p class="text-sm text-gray-600">Member Tier</p>
@@ -37,18 +37,18 @@
                 </div>
               </div>
               <div class="w-full bg-gray-200 rounded-full h-2 mt-4">
-                <div class="bg-primary-500 h-2 rounded-full" style="width: 70%"></div>
+                <div class="bg-gold-500 h-2 rounded-full" style="width: 70%"></div>
               </div>
               <p class="text-sm text-gray-600 mt-2">750 points to Gold tier</p>
             </BaseCard>
             <BaseCard>
               <div class="flex items-center gap-3">
-                <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-                  <Gift class="w-6 h-6 text-purple-500" />
+                <div class="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
+                  <Gift class="w-6 h-6 text-primary-600" />
                 </div>
                 <div>
                   <p class="text-sm text-gray-600">Points Earned</p>
-                  <p class="text-xl font-semibold text-gray-900">2,250</p>
+                  <p class="text-2xl font-bold text-gold-600">2,250</p>
                 </div>
               </div>
               <p class="text-sm text-gray-600 mt-4">Lifetime earnings</p>
@@ -57,9 +57,9 @@
 
           <!-- Rewards -->
           <BaseCard class="mb-8">
-            <h2 class="text-xl font-semibold text-gray-900 mb-6">Available Rewards</h2>
+            <h2 class="text-xl font-display font-semibold text-gray-900 mb-6">Available Rewards</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div v-for="reward in rewards" :key="reward.title" class="border border-gray-200 rounded-xl p-6 hover:border-primary-500 transition">
+              <div v-for="reward in rewards" :key="reward.title" class="border border-gray-200 rounded-xl p-6 hover:border-gold-400 hover:shadow-md transition-all duration-200">
                 <div class="flex items-start justify-between mb-3">
                   <h3 class="font-semibold text-gray-900">{{ reward.title }}</h3>
                   <span class="px-3 py-1 bg-amber-100 text-amber-700 text-sm font-semibold rounded-full">{{ reward.points }} pts</span>
@@ -78,14 +78,14 @@
 
           <!-- History -->
           <BaseCard>
-            <h2 class="text-xl font-semibold text-gray-900 mb-6">Points History</h2>
+            <h2 class="text-xl font-display font-bold text-gray-900 mb-6">Points History</h2>
             <div class="space-y-4">
               <div v-for="item in pointsHistory" :key="item.date" class="flex items-center justify-between py-4 border-b border-gray-200 last:border-b-0">
                 <div>
                   <p class="font-medium text-gray-900">{{ item.description }}</p>
-                  <p class="text-sm text-gray-600">{{ item.date }}</p>
+                  <p class="text-sm text-gray-600 font-sans">{{ item.date }}</p>
                 </div>
-                <span class="font-semibold" :class="item.type === 'earned' ? 'text-green-600' : 'text-red-600'">
+                <span class="font-bold text-lg" :class="item.type === 'earned' ? 'text-green-600' : 'text-red-600'">
                   {{ item.points }}
                 </span>
               </div>

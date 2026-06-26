@@ -52,7 +52,9 @@ const login = async () => {
     localStorage.setItem('user_id', res.data.user.id)
     localStorage.setItem('username', res.data.user.username)
     localStorage.setItem('name', res.data.user.name)
-    router.push('/')
+    localStorage.setItem('email', res.data.user.email)
+    localStorage.setItem('phone', res.data.user.phoneNumber)
+    window.location.href = '/'
   } catch {
     alert('Login failed.')
   }

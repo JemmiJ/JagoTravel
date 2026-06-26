@@ -1,16 +1,20 @@
 <template>
   <div class="min-h-screen bg-gray-50">
     <NavigationBar />
-    <section class="bg-gradient-to-br from-primary-700 via-primary-800 to-green-900 text-white py-16">
-      <div class="container text-center">
-        <h1 class="text-4xl md:text-5xl font-bold mb-4">About Us</h1>
-        <p class="text-xl text-primary-100 max-w-2xl mx-auto">Connecting Jamaica to the World Since 2010</p>
+    <section class="bg-primary-800 relative overflow-hidden">
+      <div class="absolute inset-0 pointer-events-none select-none opacity-10">
+        <div class="absolute top-8 left-12 w-48 h-48 rounded-full border border-white/30"></div>
+        <div class="absolute bottom-4 right-16 w-72 h-72 rounded-full border border-white/20"></div>
+      </div>
+      <div class="container text-center py-16 relative animate-fade-in">
+        <h1 class="text-4xl md:text-5xl font-display font-bold text-white mb-4">About <span class="text-gold-400">Us</span></h1>
+        <p class="text-xl text-white/70 max-w-2xl mx-auto">Connecting Jamaica to the World Since 2010</p>
       </div>
     </section>
 
     <div class="container py-16 space-y-16">
-      <BaseCard>
-        <h2 class="text-3xl font-bold text-center mb-6">Our Story</h2>
+      <BaseCard class="animate-fade-in-up">
+        <h2 class="text-3xl font-display font-bold text-center mb-6 text-gray-900">Our Story</h2>
         <div class="space-y-4 text-gray-700 text-lg leading-relaxed max-w-4xl mx-auto">
           <p>Jago Travel was founded with a simple mission: to make travel accessible, enjoyable, and stress-free for everyone. Based in the heart of Jamaica, we've been serving travelers for over a decade...</p>
           <p>Our team of dedicated travel professionals brings years of experience and a passion for exploration...</p>
@@ -19,30 +23,46 @@
       </BaseCard>
 
       <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <BaseCard v-for="item in missionItems" :key="item.title" class="text-center">
-          <div class="text-4xl mb-4">{{ item.icon }}</div>
+        <BaseCard
+          v-for="(item, idx) in missionItems"
+          :key="item.title"
+          class="text-center animate-fade-in-up"
+          :style="{ animationDelay: `${idx * 100}ms` }"
+        >
+          <div class="w-14 h-14 bg-gold-50 rounded-2xl flex items-center justify-center mx-auto mb-4 border border-gold-200">
+            <component :is="item.icon" class="w-7 h-7 text-gold-600" />
+          </div>
           <h3 class="text-xl font-bold text-gray-900 mb-3">{{ item.title }}</h3>
           <p class="text-gray-600">{{ item.description }}</p>
         </BaseCard>
       </div>
 
       <div>
-        <h2 class="text-3xl font-bold text-center mb-8">Meet Our Team</h2>
+        <h2 class="text-3xl font-display font-bold text-center mb-8 text-gray-900">Meet Our Team</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          <BaseCard v-for="member in teamMembers" :key="member.name" class="overflow-hidden p-0">
-            <div class="aspect-square bg-gradient-to-br from-primary-100 to-green-100 flex items-center justify-center">
-              <span class="text-6xl">👤</span>
+          <BaseCard
+            v-for="(member, idx) in teamMembers"
+            :key="member.name"
+            class="overflow-hidden p-0 group animate-fade-in-up"
+            :style="{ animationDelay: `${idx * 100}ms` }"
+          >
+            <div class="aspect-square bg-gradient-to-br from-primary-700 to-primary-900 flex items-center justify-center overflow-hidden">
+              <img
+                :src="`https://ui-avatars.com/api/?name=${encodeURIComponent(member.name)}&background=1e3a5f&color=ffd700&size=300`"
+                :alt="member.name"
+                class="w-full h-full object-cover"
+              />
             </div>
             <div class="p-6 text-center">
-              <h3 class="text-lg font-bold text-gray-900">{{ member.name }}</h3>
-              <p class="text-primary-600">{{ member.role }}</p>
+              <h3 class="text-lg font-bold text-gray-900 group-hover:text-primary-700 transition-colors">{{ member.name }}</h3>
+              <p class="text-gold-600">{{ member.role }}</p>
             </div>
           </BaseCard>
         </div>
       </div>
 
       <BaseCard>
-        <h2 class="text-3xl font-bold text-center mb-8">Get In Touch</h2>
+        <h2 class="text-3xl font-display font-bold text-center mb-8 text-gray-900">Get In Touch</h2>
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <div>
             <h3 class="font-bold text-gray-900 mb-4">Contact Information</h3>
@@ -55,7 +75,7 @@
           <div>
             <h3 class="font-bold text-gray-900 mb-4">Follow Us</h3>
             <div class="flex gap-4">
-              <button v-for="(icon, idx) in socialIcons" :key="idx" class="p-3 bg-primary-100 rounded-full hover:bg-primary-200 transition"><component :is="icon" class="w-6 h-6 text-primary-500" /></button>
+              <button v-for="(icon, idx) in socialIcons" :key="idx" class="p-3 bg-primary-50 rounded-full hover:bg-gold-500 transition-all duration-200 hover:scale-105 group"><component :is="icon" class="w-6 h-6 text-primary-600 group-hover:text-primary-900" /></button>
             </div>
           </div>
         </div>
@@ -71,12 +91,12 @@
 <script setup>
 import NavigationBar from '@/components/layout/NavigationBar.vue'
 import BaseCard from '@/components/ui/BaseCard.vue'
-import { Mail, Phone, Facebook, Twitter, Instagram, Linkedin } from 'lucide-vue-next'
+import { Mail, Phone, Facebook, Twitter, Instagram, Linkedin, Target, Eye, Star } from 'lucide-vue-next'
 
 const missionItems = [
-  { icon: '🎯', title: 'Our Mission', description: 'To provide exceptional travel experiences through innovative solutions, outstanding customer service, and competitive pricing.' },
-  { icon: '👁️', title: 'Our Vision', description: 'To be the leading travel platform in the Caribbean, recognized for excellence in service and innovation in travel technology.' },
-  { icon: '⭐', title: 'Our Values', description: 'Integrity, customer focus, innovation, and a commitment to making every journey memorable and hassle-free.' },
+  { icon: Target, title: 'Our Mission', description: 'To provide exceptional travel experiences through innovative solutions, outstanding customer service, and competitive pricing.' },
+  { icon: Eye, title: 'Our Vision', description: 'To be the leading travel platform in the Caribbean, recognized for excellence in service and innovation in travel technology.' },
+  { icon: Star, title: 'Our Values', description: 'Integrity, customer focus, innovation, and a commitment to making every journey memorable and hassle-free.' },
 ]
 
 const teamMembers = [

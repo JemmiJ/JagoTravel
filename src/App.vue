@@ -1,19 +1,25 @@
 <script setup>
 import { RouterLink, RouterView } from 'vue-router'
 import NavigationBar from '@/components/layout/NavigationBar.vue'
+import Footer from '@/components/layout/Footer.vue'
 import '@/assets/main.css'
 </script>
 
 <template>
   <main>
-    <RouterView />
+    <router-view v-slot="{ Component }">
+      <transition name="fade" mode="out-in">
+        <component :is="Component" />
+      </transition>
+    </router-view>
+    <Footer />
   </main>
 </template>
 
 <style>
 .fade-enter-active,
 .fade-leave-active {
-  transition: opacity 0.5s ease;
+  transition: opacity 0.2s ease;
 }
 .fade-enter-from,
 .fade-leave-to {
