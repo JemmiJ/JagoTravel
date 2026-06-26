@@ -37,4 +37,9 @@ __screenshots__/
 
 # Vite
 *.timestamp-*-*.mjs
-".env" 
+.env 
+
+
+venv/
+*.db
+__pycache__/

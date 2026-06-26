@@ -74,7 +74,7 @@ const router = useRouter()
 const showDropdown = ref(false)
 const user = ref({ name: '' })
 
-const isAuthenticated = computed(() => !!localStorage.getItem('user_id'))
+const isAuthenticated = ref(!!localStorage.getItem('user_id'))
 
 onMounted(() => {
   const storedName = localStorage.getItem('name')
@@ -103,7 +103,11 @@ function closeDropdown()  { showDropdown.value = false }
 function handleLogout() {
   localStorage.removeItem('token')
   localStorage.removeItem('user_id')
+  localStorage.removeItem('username')
   localStorage.removeItem('name')
-  router.push('/')
+  localStorage.removeItem('email')
+  localStorage.removeItem('phone')
+  isAuthenticated.value = false
+  window.location.href = '/'
 }
 </script>

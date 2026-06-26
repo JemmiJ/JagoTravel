@@ -90,6 +90,16 @@
                 <span class="font-medium text-gray-900">{{ formatTime(flightDetails.arrival) }}</span>
               </div>
             </div>
+            <div class="space-y-2 mb-4">
+              <div class="flex justify-between text-sm">
+                <span class="text-gray-500">Base Fare</span>
+                <span class="text-gray-700">${{ flightDetails.price.toLocaleString() }} JMD</span>
+              </div>
+              <div class="flex justify-between text-sm">
+                <span class="text-gray-500">Taxes & Fees (15%)</span>
+                <span class="text-gray-700">${{ Math.round(flightDetails.price * 0.15).toLocaleString() }} JMD</span>
+              </div>
+            </div>
             <div class="bg-primary-50 rounded-lg p-4">
               <div class="flex justify-between items-center">
                 <span class="font-semibold text-gray-900">TOTAL</span>
@@ -162,8 +172,9 @@ const fetchFlightDetails = async () => {
 }
 
 const fetchUserDetails = () => {
-  const name = localStorage.getItem('name') || 'User'
-  userDetails.name = name
+  userDetails.name = localStorage.getItem('name') || ''
+  userDetails.email = localStorage.getItem('email') || ''
+  userDetails.phone = localStorage.getItem('phone') || ''
 }
 
 onMounted(() => {
@@ -203,9 +214,12 @@ const handleSubmit = async () => {
   }
 
   try {
-    const resp = await axios.post('/api/bookings', payload, { withCredentials: true })
+    const token = localStorage.getItem('token')
+    const resp = await axios.post('/api/bookings', payload, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
     const bookingId = resp.data.booking_id
-    router.push(`/book-flight/payment?booking=${bookingId}`)
+    router.push(`/book-flight/payment?booking=${bookingId}&amount=${totalPrice}`)
   } catch (error) {
     console.error('Booking creation failed:', error)
     alert(error.response?.data?.error || 'Something went wrong. Please try again.')

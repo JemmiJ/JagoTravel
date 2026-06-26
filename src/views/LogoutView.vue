@@ -27,7 +27,10 @@ onMounted(async () => {
   }
   localStorage.removeItem('token')
   localStorage.removeItem('user_id')
+  localStorage.removeItem('username')
   localStorage.removeItem('name')
-  router.push('/')
+  localStorage.removeItem('email')
+  localStorage.removeItem('phone')
+  window.location.href = '/'
 })
 </script>

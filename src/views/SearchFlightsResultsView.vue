@@ -151,7 +151,7 @@ const bookNow = (id) => {
   if (!isAuthenticated.value) {
     router.push('/login')
   } else {
-    router.push(`/book-flight?flight=${id}`)
+    router.push(`/book-flight?flight=${id}&origin=${query.value.origin}&destination=${query.value.destination}`)
   }
 }
 </script>

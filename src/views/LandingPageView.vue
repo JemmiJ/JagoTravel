@@ -10,6 +10,9 @@
         <div class="absolute top-1/2 left-1/3 w-32 h-32 rounded-full border border-white/15"></div>
       </div>
       <div class="container py-20 md:py-28 text-center relative animate-fade-in">
+         <div class="flex justify-start mb-0 pl-6">
+          <img src="@/assets/Jago.png" alt="Jago Travel" class="h-60 w-auto" />
+        </div>
         <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-gold-500/40 text-gold-400 text-sm font-medium mb-8 bg-gold-500/10">
           <Plane class="w-4 h-4" />
           Jamaica's trusted flight booking platform

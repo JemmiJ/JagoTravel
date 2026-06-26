@@ -8,7 +8,13 @@
         </div>
         <div class="lg:col-span-3 animate-fade-in-up">
           <h1 class="text-3xl font-display font-bold text-gray-900 mb-8">My Profile</h1>
-          <BaseCard>
+
+          <!-- Loading state -->
+          <div v-if="loading" class="flex justify-center py-12">
+            <Loader2 class="w-12 h-12 text-primary-500 animate-spin" />
+          </div>
+
+          <BaseCard v-else>
             <div class="flex items-center gap-6 mb-8 pb-8 border-b border-gray-200">
               <div class="w-24 h-24 bg-primary-800 rounded-full flex items-center justify-center">
                 <User class="w-12 h-12 text-gold-400" />
@@ -27,8 +33,10 @@
                 <BaseInput v-model="form.passportNumber" label="Passport Number" />
               </div>
               <div class="flex justify-end gap-4 pt-6 border-t border-gray-200">
-                <BaseButton variant="outline" @click="reset">Cancel</BaseButton>
-                <BaseButton type="submit">Save Changes</BaseButton>
+                <BaseButton variant="outline" type="button" @click="resetForm">Cancel</BaseButton>
+                <BaseButton type="submit" :disabled="saving">
+                  {{ saving ? 'Saving...' : 'Save Changes' }}
+                </BaseButton>
               </div>
             </form>
           </BaseCard>
@@ -39,9 +47,10 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue'
-import { RouterLink, useRouter } from 'vue-router'
-import { User } from 'lucide-vue-next'
+import { reactive, ref, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
+import axios from 'axios'
+import { User, Loader2 } from 'lucide-vue-next'
 import NavigationBar from '@/components/layout/NavigationBar.vue'
 import SidebarNav from '@/components/layout/sideNavigationBar.vue'
 import BaseCard from '@/components/ui/BaseCard.vue'
@@ -51,7 +60,19 @@ import BaseButton from '@/components/ui/BaseButton.vue'
 import { getToken } from '@/utils/auth'
 
 const router = useRouter()
-if (!getToken()) router.push('/login')
+const token = getToken()
+if (!token) router.push('/login')
+
+const loading = ref(true)
+const saving = ref(false)
+
+const form = reactive({
+  fullName: '',
+  email: '',
+  phone: '',
+  parish: 'Kingston',
+  passportNumber: '',
+})
 
 const sidebarItems = [
   { label: 'My Bookings', path: '/profile/my-bookings', icon: 'Calendar' },
@@ -60,31 +81,54 @@ const sidebarItems = [
   { label: 'Settings', path: '/profile/settings', icon: 'Settings' },
 ]
 
-const form = reactive({
-  fullName: 'John Doe',
-  email: 'john.doe@example.com',
-  phone: '+1 876 123 4567',
-  parish: 'Kingston',
-  passportNumber: 'JM1234567',
-})
-
 const parishes = [
   'Kingston', 'St. Andrew', 'St. Catherine', 'Clarendon', 'Manchester',
   'St. Elizabeth', 'Westmoreland', 'Hanover', 'St. James', 'Trelawny',
   'St. Ann', 'St. Mary', 'Portland', 'St. Thomas',
 ]
 
-function reset() {
-  Object.assign(form, {
-    fullName: 'John Doe',
-    email: 'john.doe@example.com',
-    phone: '+1 876 123 4567',
-    parish: 'Kingston',
-    passportNumber: 'JM1234567',
-  })
+const fetchUser = async () => {
+  try {
+    const res = await axios.get('/api/user', {
+      headers: { Authorization: `Bearer ${token}` }
+    })
+    const user = res.data
+    form.fullName = user.name || ''
+    form.email = user.email || ''
+    form.phone = user.phoneNumber || ''
+  } catch (error) {
+    console.error('Failed to load profile:', error)
+  } finally {
+    loading.value = false
+  }
 }
 
-function handleSubmit() {
-  alert('Profile updated! (This is a demo)')
+onMounted(fetchUser)
+
+function resetForm() {
+  loading.value = true
+  fetchUser()
+}
+
+const handleSubmit = async () => {
+  saving.value = true
+  try {
+    await axios.put(
+      '/api/user',
+      {
+        name: form.fullName,
+        email: form.email,
+        phoneNumber: form.phone,
+      },
+      { headers: { Authorization: `Bearer ${token}` } }
+    )
+    alert('Profile updated successfully!')
+  } catch (error) {
+    console.error('Update failed:', error)
+    const msg = error.response?.data?.error || 'Could not update profile.'
+    alert(msg)
+  } finally {
+    saving.value = false
+  }
 }
 </script>

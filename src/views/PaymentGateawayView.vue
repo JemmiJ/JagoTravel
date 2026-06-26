@@ -1,83 +1,99 @@
 <template>
-  <div class="min-h-screen bg-gradient-to-b from-primary-50/30 to-white flex items-center justify-center px-4">
-    <div class="max-w-md w-full animate-fade-in-up">
-      <BaseCard class="text-center p-8">
-        <div class="w-20 h-20 bg-gold-500 rounded-full flex items-center justify-center mx-auto mb-6">
-          <Plane class="w-10 h-10 text-primary-900" />
-        </div>
-        <h1 class="text-3xl md:text-4xl font-display font-bold text-gray-900 mb-4">Complete Payment</h1>
-        <p class="text-gray-600 mb-6">Secure payment via Stripe</p>
-
-        <div v-if="!clientSecret" class="flex flex-col items-center justify-center gap-3 py-6">
-          <Loader2 class="w-8 h-8 text-gold-400 animate-spin" />
-          <p class="text-sm text-gray-500">Setting up secure payment...</p>
+  <div class="min-h-screen bg-gray-50">
+    <NavigationBar />
+    <div class="container py-16 md:py-20 max-w-lg mx-auto">
+      <BaseCard>
+        <div class="text-center mb-8">
+          <h1 class="text-3xl font-display font-bold text-gray-900">Complete Payment</h1>
+          <p class="text-gray-500 mt-2 text-sm">Secure mock payment for demo purposes</p>
         </div>
 
-        <div v-else id="payment-element" class="mb-6"></div>
+        <div v-if="loading" class="flex flex-col items-center gap-3 py-8">
+          <Loader2 class="w-10 h-10 text-gold-400 animate-spin" />
+          <p class="text-sm text-gray-500">Loading booking details...</p>
+        </div>
 
-        <p class="text-sm text-gray-500 mb-1 font-sans">Total Amount</p>
-        <p class="text-gold-400 font-bold text-2xl mb-6">{{ totalAmount }}</p>
+        <div v-else>
+          <!-- Amount display -->
+          <div class="bg-primary-50 rounded-xl p-6 mb-6 text-center">
+            <p class="text-sm text-gray-500 mb-1">Total Amount</p>
+            <p class="text-4xl font-bold text-gold-600">
+              ${{ amount.toLocaleString() }} JMD
+            </p>
+          </div>
 
-        <BaseButton
-          @click="handlePay"
-          :disabled="processing"
-          size="lg"
-          block
-        >
-          {{ processing ? 'Processing...' : `Pay $${totalAmount}` }}
-        </BaseButton>
-        <p class="text-sm text-gray-500 mt-4">You'll be redirected after payment</p>
+          <!-- Price breakdown -->
+          <div class="space-y-2 mb-6 pb-6 border-b border-gray-100">
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-500">Base Fare</span>
+              <span class="text-gray-900">${{ baseFare.toLocaleString() }} JMD</span>
+            </div>
+            <div class="flex justify-between text-sm">
+              <span class="text-gray-500">Taxes & Fees (15%)</span>
+              <span class="text-gray-900">${{ taxes.toLocaleString() }} JMD</span>
+            </div>
+            <div class="flex justify-between text-sm font-semibold pt-2 border-t border-gray-100">
+              <span class="text-gray-900">Total</span>
+              <span class="text-gold-600">${{ amount.toLocaleString() }} JMD</span>
+            </div>
+          </div>
+
+          <!-- Pay button -->
+          <BaseButton
+            size="lg"
+            block
+            :disabled="processing"
+            @click="handlePayment"
+          >
+            <span v-if="processing" class="flex items-center justify-center gap-2">
+              <Loader2 class="w-4 h-4 animate-spin" />
+              Processing...
+            </span>
+            <span v-else>Pay ${{ amount.toLocaleString() }} JMD</span>
+          </BaseButton>
+
+          <p class="text-center text-xs text-gray-400 mt-4">
+            You'll be redirected to your booking confirmation after payment
+          </p>
+        </div>
       </BaseCard>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { Plane, Loader2 } from 'lucide-vue-next'
+import { Loader2 } from 'lucide-vue-next'
 import axios from 'axios'
-import { loadStripe } from '@stripe/stripe-js'
+import NavigationBar from '@/components/layout/NavigationBar.vue'
 import BaseCard from '@/components/ui/BaseCard.vue'
 import BaseButton from '@/components/ui/BaseButton.vue'
 
 const route = useRoute()
 const router = useRouter()
+
 const bookingId = route.query.booking
-const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY)
-
-const clientSecret = ref(null)
+const loading = ref(false)
 const processing = ref(false)
-const totalAmount = ref('45,000 JMD')
 
-onMounted(async () => {
-  try {
-    const resp = await axios.post('/api/create-payment-intent', { booking_id: bookingId })
-    const secret = resp.data.client_secret
-    clientSecret.value = secret
+// Amount passed directly from booking form in URL
+const amount = ref(parseInt(route.query.amount) || 0)
+const baseFare = ref(Math.round(amount.value / 1.15))
+const taxes = ref(amount.value - baseFare.value)
 
-    const stripe = await stripePromise
-    const elements = stripe.elements({ clientSecret: secret })
-    const paymentElement = elements.create('payment')
-    paymentElement.mount('#payment-element')
-  } catch (error) {
-    console.error('Payment initiation failed', error)
-    alert('Could not initiate payment. Please try again.')
-  }
-})
-
-const handlePay = async () => {
+const handlePayment = async () => {
+  if (!bookingId) return
   processing.value = true
-  const stripe = await stripePromise
-  const { error } = await stripe.confirmPayment({
-    elements: document.querySelector('#payment-element')._elements,
-    redirect: 'if_required',
-  })
-  if (error) {
-    alert(error.message)
-    processing.value = false
-  } else {
+  try {
+    const token = localStorage.getItem('token')
+    await axios.post('/api/mock-payment', { booking_id: bookingId }, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
     router.push(`/book-flight/confirmation?booking=${bookingId}`)
+  } catch (e) {
+    alert(e.response?.data?.error || 'Payment failed. Please try again.')
+    processing.value = false
   }
 }
 </script>

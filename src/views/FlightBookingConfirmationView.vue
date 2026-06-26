@@ -2,25 +2,24 @@
   <div class="min-h-screen bg-gradient-to-b from-primary-50/30 to-white">
     <NavigationBar />
     <div class="container py-16 max-w-3xl">
-      <div v-if="loading" class="flex flex-col items-center justify-center gap-3 py-12">
-        <Loader2 class="w-12 h-12 text-gold-400 animate-spin" />
-        <p class="text-sm text-gray-500">Loading your booking...</p>
+      <div v-if="loading" class="flex justify-center py-12">
+        <Loader2 class="w-12 h-12 text-primary-500 animate-spin" />
       </div>
 
-      <div v-else-if="bookingData" class="text-center mb-12 animate-fade-in-up">
+      <div v-else-if="bookingData" class="text-center mb-12">
         <div class="w-24 h-24 bg-success rounded-full flex items-center justify-center mx-auto mb-6">
           <CheckCircle class="w-16 h-16 text-white" />
         </div>
-        <h1 class="text-4xl font-display font-bold text-gray-900 mb-4">Your Flight is Booked!</h1>
+        <h1 class="text-4xl font-bold text-gray-900 mb-4">Your Flight is Booked!</h1>
         <p class="text-xl text-gray-600">Get ready for your journey</p>
       </div>
 
-      <div v-if="bookingData" class="space-y-6 animate-fade-in-up">
+      <div v-if="bookingData" class="space-y-6">
         <BaseCard>
           <div class="text-center mb-6">
             <p class="text-sm text-gray-600">Booking Reference</p>
             <div class="flex items-center justify-center gap-2">
-              <p class="text-3xl font-bold text-gold-600">{{ bookingData.booking_reference }}</p>
+              <p class="text-3xl font-bold text-primary-500">{{ bookingData.booking_reference }}</p>
               <button @click="copyRef" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
                 <Copy class="w-5 h-5 text-gray-600" />
               </button>
@@ -28,7 +27,7 @@
           </div>
 
           <div class="bg-primary-50 rounded-xl p-6 mb-6">
-            <h2 class="font-display font-bold text-gray-900 mb-4">Flight Summary</h2>
+            <h2 class="font-semibold text-gray-900 mb-4">Flight Summary</h2>
             <div class="space-y-2">
               <div class="flex justify-between">
                 <span class="text-gray-600">Route</span>
@@ -57,7 +56,7 @@
           </div>
 
           <div class="mb-6">
-            <h2 class="font-display font-bold text-gray-900 mb-4">Next Steps</h2>
+            <h2 class="font-semibold text-gray-900 mb-4">Next Steps</h2>
             <div v-for="(step, idx) in nextSteps" :key="idx" class="flex items-start gap-3 mb-2">
               <CheckCircle v-if="idx === 0" class="w-5 h-5 text-success mt-0.5 flex-shrink-0" />
               <div v-else class="w-5 h-5 border-2 border-gray-300 rounded-full mt-0.5 flex-shrink-0"></div>
@@ -118,7 +117,10 @@ onMounted(async () => {
   }
   loading.value = true
   try {
-    const resp = await axios.get(`/api/bookings/${bookingId}`, { withCredentials: true })
+    const token = localStorage.getItem('token')
+    const resp = await axios.get(`/api/bookings/${bookingId}`, {
+      headers: { Authorization: `Bearer ${token}` }
+    })
     bookingData.value = resp.data
   } catch (error) {
     console.error('Failed to load booking', error)
