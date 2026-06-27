@@ -15,18 +15,6 @@
     </section>
 
     <div class="container py-16 md:py-20 space-y-16">
-      <div class="max-w-2xl mx-auto animate-fade-in-up">
-        <div class="relative">
-          <Search class="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400" />
-          <input
-            v-model="searchQuery"
-            type="text"
-            placeholder="Search for flight information..."
-            class="w-full pl-12 pr-4 py-4 border border-gray-300 rounded-xl focus:ring-2 focus:ring-gold-500 focus:border-transparent shadow-md transition-shadow"
-          />
-        </div>
-      </div>
-
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
         <BaseCard
           v-for="(info, idx) in filteredInfo"
